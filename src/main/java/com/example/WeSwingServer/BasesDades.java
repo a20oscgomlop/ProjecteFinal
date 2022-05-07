@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BasesDades {
-    
+
     public static void inserirEvent(String titol, String link, String pais, String dia){
         String consulta = "INSERT INTO EVENTOS (titol,link,pais,dia) VALUES (?,?,?,?);";
         if(comprovarEvent(titol,link,pais,dia)){
