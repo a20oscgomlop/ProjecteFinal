@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import items.DanceEventItemID;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,8 @@ public class WeSwingService {
     @CrossOrigin
     @RequestMapping(path="/show")
     @ResponseBody
-    public List<DanceEventItem> info() {
-        List<DanceEventItem> events = new ArrayList<>();
+    public List<DanceEventItemID> info() {
+        List<DanceEventItemID> events = new ArrayList<>();
         WebClient webClient = new WebClient(BrowserVersion.CHROME);
 
 // DATA FROM  -SWINGPLANIT-
@@ -100,7 +101,7 @@ public class WeSwingService {
             System.out.println("Error: " + e);
         }
         int count = 0;
-        for(DanceEventItem event: events){
+        for(DanceEventItemID event: events){
             System.out.println(count);
             count++;
             System.out.println(event.toString());
@@ -111,12 +112,11 @@ public class WeSwingService {
     @CrossOrigin
     @RequestMapping(path = "/events")
     @ResponseBody
-    public List<DanceEventItem> getEvents() {
-        List<DanceEventItem> events = new ArrayList<>();
+    public List<DanceEventItemID> getEvents() {
+        List<DanceEventItemID> events = new ArrayList<>();
         events = BasesDades.totsEvents();
         return events;
     }
-
     @CrossOrigin
     @RequestMapping(path = "/item/{id}")
     @ResponseBody

@@ -1,6 +1,7 @@
 package com.example.WeSwingServer;
 
 import items.DanceEventItem;
+import items.DanceEventItemID;
 
 import java.io.IOException;
 import java.sql.*;
@@ -61,20 +62,24 @@ public class BasesDades {
         }
     }
 
-    public static List<DanceEventItem> totsEvents(){
-        List<DanceEventItem> events = new ArrayList<>();
+
+    public static List<DanceEventItemID> totsEvents(){
+        List<DanceEventItemID> events = new ArrayList<>();
         String consulta = "SELECT * FROM EVENTS;";
         try{
             Connection conn = ConnexioBD.connexioBD();
             Statement sta = conn.createStatement();
             ResultSet resultat = sta.executeQuery(consulta);
             while(resultat.next()){
-                events.add(new DanceEventItem(resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
+                events.add(new DanceEventItemID(resultat.getInt("id"),resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        for(DanceEventItemID event: events){
+            System.out.println(event.toString());
         }
         return events;
     }
