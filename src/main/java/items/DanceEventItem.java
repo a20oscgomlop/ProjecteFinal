@@ -80,7 +80,7 @@ public class DanceEventItem {
 
 	@Override
 	public String toString() {
-		return "Event [title=" + title + ", country=" + country + ", town=" + town + ", date=" + date + ", styles=" + styles + ", description=" + description + "]";
+		return "Event [tsitle=" + title + ", country=" + country + ", town=" + town + ", date=" + date + ", styles=" + styles + ", description=" + description + "]";
 	}
 
 

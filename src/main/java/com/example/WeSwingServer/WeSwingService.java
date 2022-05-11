@@ -22,6 +22,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlListItem;
 
 import items.DanceEventItem;
+import profile.Profile;
 //import profile.Profile;
 
 @Controller
@@ -92,7 +93,7 @@ public class WeSwingService {
                 String description = ((HtmlDivision) internalPage.getByXPath(".//div[@class='scroll-pane2']").get(0)).getTextContent();
                 description = description.trim();
                 System.out.println(description);
-                BasesDades.inserirEvent(articleTitle,country,town,date,styles,description);
+                BasesDades.inserirEvent(articleTitle,country,town,date,styles,description,"");
 
             }
             events = BasesDades.totsEvents();
@@ -113,24 +114,26 @@ public class WeSwingService {
     @RequestMapping(path = "/events")
     @ResponseBody
     public List<DanceEventItemID> getEvents() {
-        List<DanceEventItemID> events = new ArrayList<>();
+        List<DanceEventItemID> events;
         events = BasesDades.totsEvents();
+        for(DanceEventItemID event: events){
+            System.out.println(event.toString());
+        }
         return events;
     }
     @CrossOrigin
     @RequestMapping(path = "/item/{id}")
     @ResponseBody
-    public List<DanceEventItem> getItem(@PathVariable(value="id") String id) {
+    public List<DanceEventItemID> getItem(@PathVariable(value="id") String id) {
 // fetch from database to get item with speceific id
 // return item
         System.out.println("a");
-        List<DanceEventItem> events = new ArrayList<>();
-        DanceEventItem item = new DanceEventItem("Frisking The Whiskers", "Lowestoft",
-                "Suffolk", "14th Apr 2023 - 16th Apr 2023", "Balboa, Jazz, Lindy Hop, Shag", "A fantastic weekend of roots music and dancing from the 20s - 50s, with a few surprises thrown in for your pleasure! An inclusive event for music lovers and dancers alike.", "");
-        events.add(item);
+        List<DanceEventItemID> events = new ArrayList<>();
+        events = BasesDades.unEvent(id);
         return events;
     }
-/*
+
+    //Edit profile
     @CrossOrigin
     @RequestMapping(path = "/saveProfile", method = RequestMethod.POST)
     public void process(@RequestBody Profile profile) {
@@ -143,8 +146,9 @@ public class WeSwingService {
         System.out.println(profile.getLanguage());
         System.out.println(profile.getDescription());
 //UPDATE DATABASE SEARCHING WITH USERNAME
+        BasesDades.updateUser(profile.getUsername(),profile.getFullName(),profile.getDate(),profile.getEmail(),profile.getGender(),profile.getCountry(),profile.getLanguage(), profile.getDescription());
     }
-*/
+
     @CrossOrigin
     @RequestMapping(path="/addEvent", method = RequestMethod.POST)
     public void addEvent(@RequestBody DanceEventItem newItem) {
@@ -155,6 +159,7 @@ public class WeSwingService {
         System.out.println(newItem.getStyles());
         System.out.println(newItem.getDescription());
         System.out.println(newItem.getOrganizer());
+        BasesDades.inserirEvent(newItem.getTitle(), newItem.getCountry(), newItem.getTown(),newItem.getDate(),newItem.getStyles(),newItem.getDescription(),newItem.getOrganizer());
 //UPDATE DATABASE
     }
 

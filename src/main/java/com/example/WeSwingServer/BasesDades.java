@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasesDades {
-    public static void inserirEvent(String articleTitle, String country, String town, String date,String styles, String description){
-        String consulta = "INSERT INTO EVENTS (title,country,town,date,styles,description) VALUES (?,?,?,?,?,?);";
-        if(comprovarEvent(articleTitle,country,town,date,styles,description)){
+    public static void inserirEvent(String articleTitle, String country, String town, String date,String styles, String description, String organizer){
+        String consulta = "INSERT INTO EVENTS (title,country,town,date,styles,description,organizer) VALUES (?,?,?,?,?,?,?);";
+        if(comprovarEvent(articleTitle,country,town,date,styles,description,organizer)){
             try {
                 Connection conn = ConnexioBD.connexioBD();
                 PreparedStatement sta = conn.prepareStatement(consulta);
@@ -21,6 +21,7 @@ public class BasesDades {
                 sta.setString(4,date);
                 sta.setString(5,styles);
                 sta.setString(6,description);
+                sta.setString(7,organizer);
                 sta.executeUpdate();
                 sta.close();
                 ConnexioBD.tancaBD(conn);
@@ -35,8 +36,8 @@ public class BasesDades {
         }
     }
 
-    public static boolean comprovarEvent(String articleTitle, String country, String town, String date,String styles, String description){
-        String consulta = "SELECT * FROM EVENTS WHERE (title = ? && country = ? && town = ? && date = ? && styles = ? && description = ?);";
+    public static boolean comprovarEvent(String articleTitle, String country, String town, String date,String styles, String description, String organizer){
+        String consulta = "SELECT * FROM EVENTS WHERE (title = ? && country = ? && town = ? && date = ? && styles = ? && description = ? && organizer = ?);";
         try{
             Connection conn = ConnexioBD.connexioBD();
             PreparedStatement sta = conn.prepareStatement(consulta);
@@ -46,6 +47,7 @@ public class BasesDades {
             sta.setString(4,date);
             sta.setString(5,styles);
             sta.setString(6,description);
+            sta.setString(7,organizer);
             ResultSet resultat = sta.executeQuery();
             if(!resultat.next()){
                 sta.close();
@@ -78,9 +80,46 @@ public class BasesDades {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for(DanceEventItemID event: events){
-            System.out.println(event.toString());
+        return events;
+    }
+
+    public static List<DanceEventItemID> unEvent(String idEvent){
+        List<DanceEventItemID> events = new ArrayList<>();
+        String consulta = "SELECT * FROM EVENTS WHERE id = ?;";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setInt(1,Integer.parseInt(idEvent));
+            ResultSet resultat = sta.executeQuery();
+            while(resultat.next()){
+                events.add(new DanceEventItemID(resultat.getInt("id"),resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return events;
+    }
+
+    public static void updateUser(String username,String fullname, String birthday, String email, String gender, String country,String language, String description){
+        String consulta = "UPDATE USERS SET full_name = ? , birth_date = ? , email = ?, gender = ?, country = ?, language = ? ,description = ? WHERE username = ?;";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setString(1,fullname);
+            sta.setString(2,birthday);
+            sta.setString(3,email);
+            sta.setString(4,gender);
+            sta.setString(5,country);
+            sta.setString(6,language);
+            sta.setString(7,description);
+            sta.setString(8,username);
+            sta.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
