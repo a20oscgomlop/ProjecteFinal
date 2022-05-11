@@ -1,23 +1,25 @@
 package com.example.WeSwingServer;
 
+import items.DanceEventItem;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BasesDades {
-
-    public static void inserirEvent(String titol, String link, String pais, String dia){
-        String consulta = "INSERT INTO EVENTOS (titol,link,pais,dia) VALUES (?,?,?,?);";
-        if(comprovarEvent(titol,link,pais,dia)){
+    public static void inserirEvent(String articleTitle, String country, String town, String date,String styles, String description){
+        String consulta = "INSERT INTO EVENTS (title,country,town,date,styles,description) VALUES (?,?,?,?,?,?);";
+        if(comprovarEvent(articleTitle,country,town,date,styles,description)){
             try {
                 Connection conn = ConnexioBD.connexioBD();
                 PreparedStatement sta = conn.prepareStatement(consulta);
-                sta.setString(1,titol);
-                sta.setString(2,link);
-                sta.setString(3,pais);
-                sta.setString(4,dia);
+                sta.setString(1,articleTitle);
+                sta.setString(2,country);
+                sta.setString(3,town);
+                sta.setString(4,date);
+                sta.setString(5,styles);
+                sta.setString(6,description);
                 sta.executeUpdate();
                 sta.close();
                 ConnexioBD.tancaBD(conn);
@@ -32,15 +34,17 @@ public class BasesDades {
         }
     }
 
-    public static boolean comprovarEvent(String titol, String link, String pais, String dia){
-        String consulta = "SELECT * FROM EVENTOS WHERE (titol = ? && link = ? && pais = ? && dia = ? );";
+    public static boolean comprovarEvent(String articleTitle, String country, String town, String date,String styles, String description){
+        String consulta = "SELECT * FROM EVENTS WHERE (title = ? && country = ? && town = ? && date = ? && styles = ? && description = ?);";
         try{
             Connection conn = ConnexioBD.connexioBD();
             PreparedStatement sta = conn.prepareStatement(consulta);
-            sta.setString(1,titol);
-            sta.setString(2,link);
-            sta.setString(3,pais);
-            sta.setString(4,dia);
+            sta.setString(1,articleTitle);
+            sta.setString(2,country);
+            sta.setString(3,town);
+            sta.setString(4,date);
+            sta.setString(5,styles);
+            sta.setString(6,description);
             ResultSet resultat = sta.executeQuery();
             if(!resultat.next()){
                 sta.close();
@@ -55,5 +59,23 @@ public class BasesDades {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<DanceEventItem> totsEvents(){
+        List<DanceEventItem> events = new ArrayList<>();
+        String consulta = "SELECT * FROM EVENTS;";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            Statement sta = conn.createStatement();
+            ResultSet resultat = sta.executeQuery(consulta);
+            while(resultat.next()){
+                events.add(new DanceEventItem(resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return events;
     }
 }
