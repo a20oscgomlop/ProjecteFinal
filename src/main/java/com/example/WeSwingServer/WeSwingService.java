@@ -143,6 +143,14 @@ public class WeSwingService {
         return profile;
     }
 
+    //Profile list
+    @CrossOrigin
+    @RequestMapping(path="/getProfileList/{fullname}")
+    @ResponseBody
+    public List<Profile> getProfileList(@PathVariable(value="fullname") String fullname) {
+        List<Profile> profiles = BasesDades.getUserList(fullname);
+        return profiles;
+    }
 
     //Edit profile
     @CrossOrigin

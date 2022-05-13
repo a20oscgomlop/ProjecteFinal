@@ -167,4 +167,25 @@ public class BasesDades {
         }
         return profile;
     }
+
+    public static List<Profile> getUserList(String fullname){
+        String consulta = "SELECT * FROM USER WHERE full_name LIKE %?%";
+        List<Profile> profiles = new ArrayList<>();
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setString(1,fullname);
+            ResultSet resultat = sta.executeQuery();
+            while(resultat.next()){
+                profiles.add(new Profile(resultat.getString("username"),resultat.getString("full_name"),resultat.getString("birth_date"),resultat.getString("email"),resultat.getString("gender"),resultat.getString("country"),resultat.getString("language"),resultat.getString("description")));
+            }
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return profiles;
+    }
 }
