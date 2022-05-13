@@ -2,6 +2,7 @@ package com.example.WeSwingServer;
 
 import items.DanceEventItem;
 import items.DanceEventItemID;
+import profile.Profile;
 
 import java.io.IOException;
 import java.sql.*;
@@ -103,7 +104,7 @@ public class BasesDades {
     }
 
     public static void updateUser(String username,String fullname, String birthday, String email, String gender, String country,String language, String description){
-        String consulta = "UPDATE USERS SET full_name = ? , birth_date = ? , email = ?, gender = ?, country = ?, language = ? ,description = ? WHERE username = ?;";
+        String consulta = "UPDATE USER SET full_name = ? , birth_date = ? , email = ?, gender = ?, country = ?, language = ? ,description = ? WHERE username = ?;";
         try{
             Connection conn = ConnexioBD.connexioBD();
             PreparedStatement sta = conn.prepareStatement(consulta);
@@ -116,10 +117,54 @@ public class BasesDades {
             sta.setString(7,description);
             sta.setString(8,username);
             sta.executeUpdate();
+            sta.close();
+            ConnexioBD.tancaBD(conn);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void insertUser(String username,String fullname, String birthday, String email, String gender, String country,String language){
+        String consulta = "INSERT INTO USER (username,full_name,birth_date,email,gender,country,language) VALUES (?,?,?,?,?,?,?);";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setString(1,username);
+            sta.setString(2,fullname);
+            sta.setString(3,birthday);
+            sta.setString(4,email);
+            sta.setString(5,gender);
+            sta.setString(6,country);
+            sta.setString(7,language);
+            sta.executeUpdate();
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Profile getUser(String username){
+        String consulta = "SELECT * FROM USER WHERE username = ?;";
+        Profile profile = null;
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setString(1,username);
+            ResultSet resultat = sta.executeQuery();
+            resultat.next();
+            profile = new Profile(resultat.getString("username"),resultat.getString("full_name"),resultat.getString("birth_date"),resultat.getString("email"),resultat.getString("gender"),resultat.getString("country"),resultat.getString("language"),resultat.getString("description"));
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return profile;
     }
 }

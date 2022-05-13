@@ -12,6 +12,17 @@ public class Profile {
     private String language;
     private String description;
 
+    public Profile(String username, String fullName, String date, String email, String gender, String country, String language, String description) {
+        this.username = username;
+        this.fullName = fullName;
+        this.date = date;
+        this.email = email;
+        this.gender = gender;
+        this.country = country;
+        this.language = language;
+        this.description = description;
+    }
+
     public String getUsername() {
         return username;
     }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import items.DanceEventItemID;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -125,13 +126,23 @@ public class WeSwingService {
     @RequestMapping(path = "/item/{id}")
     @ResponseBody
     public List<DanceEventItemID> getItem(@PathVariable(value="id") String id) {
-// fetch from database to get item with speceific id
-// return item
+    // fetch from database to get item with speceific id
+    // return item
         System.out.println("a");
         List<DanceEventItemID> events = new ArrayList<>();
         events = BasesDades.unEvent(id);
         return events;
     }
+
+    //Profile data
+    @CrossOrigin
+    @RequestMapping(path="/profile/{username}")
+    @ResponseBody
+    public Profile getProfile(@PathVariable(value="username") String username) {
+        Profile profile = BasesDades.getUser(username);
+        return profile;
+    }
+
 
     //Edit profile
     @CrossOrigin
@@ -163,5 +174,17 @@ public class WeSwingService {
 //UPDATE DATABASE
     }
 
+    @CrossOrigin
+    @RequestMapping(path="/insertUser", method = RequestMethod.POST)
+    public void insertUser(@RequestBody Profile profile) {
+        System.out.println(profile.getUsername());
+        System.out.println(profile.getFullName());
+        System.out.println(profile.getDate());
+        System.out.println(profile.getEmail());
+        System.out.println(profile.getGender());
+        System.out.println(profile.getCountry());
+        System.out.println(profile.getLanguage());
+        BasesDades.insertUser(profile.getUsername(),profile.getFullName(),profile.getDate(), profile.getEmail(), profile.getGender(),profile.getCountry(),profile.getLanguage());
+    }
 
 }
