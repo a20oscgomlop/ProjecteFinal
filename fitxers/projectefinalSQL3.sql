@@ -1,4 +1,5 @@
 USE a20oscgomlop_projectefinal;
+
 CREATE TABLE IF NOT EXISTS EVENTS(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(150),
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS ATTEND(
 CREATE TABLE IF NOT EXISTS FOLLOW(
 	user_follows VARCHAR(150),
     user_followed VARCHAR(150),
+	PRIMARY KEY(user_follows,user_followed),
     FOREIGN KEY (user_follows) REFERENCES USER (username)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_followed) REFERENCES USER (username)
@@ -43,8 +45,11 @@ CREATE TABLE IF NOT EXISTS FOLLOW(
 CREATE TABLE IF NOT EXISTS BLOCK(
 	user_blocks VARCHAR(150),
     user_blocked VARCHAR(150),
+	PRIMARY KEY(user_blocks,user_blocked),
     FOREIGN KEY (user_blocks) REFERENCES USER (username)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_blocked) REFERENCES USER (username)
 		ON DELETE CASCADE ON UPDATE CASCADE
 	);
+    
+    
