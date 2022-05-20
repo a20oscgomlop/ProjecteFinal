@@ -188,4 +188,62 @@ public class BasesDades {
         }
         return profiles;
     }
+
+
+    public static void insertAttendance(int eventID,String username){
+        String consulta = "INSERT INTO ATTEND VALUES(?,?);";
+        try {
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setInt(1,eventID);
+            sta.setString(2,username);
+            sta.executeUpdate();
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public static boolean checkAssitance(int eventID,String username){
+        String consulta = "SELECT * FROM ATTEND WHERE id =  ? && username = ?";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setInt(1,eventID);
+            sta.setString(2,username);
+            ResultSet resultat = sta.executeQuery();
+            if(resultat.next()){
+                return true;
+            }
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public static void removeAssitance(int eventID,String username){
+        String consulta = "DELETE FROM ATTEND WHERE id = ? && username = ? ;";
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setInt(1,eventID);
+            sta.setString(2,username);
+            sta.executeUpdate();
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
