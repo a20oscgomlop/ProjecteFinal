@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
+import items.Attend;
 import items.DanceEventItemID;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -193,6 +194,13 @@ public class WeSwingService {
         System.out.println(profile.getCountry());
         System.out.println(profile.getLanguage());
         BasesDades.insertUser(profile.getUsername(),profile.getFullName(),profile.getDate(), profile.getEmail(), profile.getGender(),profile.getCountry(),profile.getLanguage());
+    }
+
+    @CrossOrigin
+    @RequestMapping(path="/attend", method = RequestMethod.POST)
+    public void attend(@RequestBody Attend attend){
+        System.out.println(attend.getId());
+        System.out.println(attend.getUsername());
     }
 
 }
