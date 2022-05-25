@@ -52,10 +52,12 @@ public class BasesDades {
             ResultSet resultat = sta.executeQuery();
             if(!resultat.next()){
                 sta.close();
+                ConnexioBD.tancaBD(conn);
                 return true;
             }
             else{
                 sta.close();
+                ConnexioBD.tancaBD(conn);
                 return false;
             }
         } catch (SQLException e) {
@@ -76,6 +78,8 @@ public class BasesDades {
             while(resultat.next()){
                 events.add(new DanceEventItemID(resultat.getInt("id"),resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
             }
+            sta.close();
+            ConnexioBD.tancaBD(conn);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -95,6 +99,8 @@ public class BasesDades {
             while(resultat.next()){
                 events.add(new DanceEventItemID(resultat.getInt("id"),resultat.getString("title"),resultat.getString("country"),resultat.getString("town"),resultat.getString("date"),resultat.getString("styles"),resultat.getString("description"),""));
             }
+            sta.close();
+            ConnexioBD.tancaBD(conn);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -240,6 +246,8 @@ public class BasesDades {
             sta.setString(2,username);
             ResultSet resultat = sta.executeQuery();
             if(resultat.next()){
+                sta.close();
+                ConnexioBD.tancaBD(conn);
                 return true;
             }
             sta.close();
