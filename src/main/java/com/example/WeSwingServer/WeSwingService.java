@@ -201,6 +201,16 @@ public class WeSwingService {
     public void attend(@RequestBody Attend attend){
         System.out.println(attend.getId());
         System.out.println(attend.getUsername());
+        BasesDades.insertAttendance(attend.getId(), attend.getUsername());
+    }
+
+    @CrossOrigin
+    @RequestMapping(path="/totalAtendees/{eventId}")
+    @ResponseBody
+    public String getAtendees(@PathVariable(value="eventId") String eventId) {
+        String total = "";
+        total = BasesDades.totalAtendees(eventId);
+        return total;
     }
 
 }

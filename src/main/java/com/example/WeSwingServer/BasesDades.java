@@ -209,6 +209,28 @@ public class BasesDades {
 
     }
 
+    public static String totalAtendees(String eventID) {
+        String totalNumber = "0";
+        String consulta = "SELECT COUNT(*) AS resultat FROM ATTEND WHERE id = ?";
+
+        try{
+            Connection conn = ConnexioBD.connexioBD();
+            PreparedStatement sta = conn.prepareStatement(consulta);
+            sta.setString(1,eventID);
+            ResultSet resultat = sta.executeQuery();
+            resultat.next();
+            totalNumber = resultat.getString("resultat");
+            sta.close();
+            ConnexioBD.tancaBD(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(totalNumber);
+        return totalNumber;
+    }
+
     public static boolean checkAssitance(int eventID,String username){
         String consulta = "SELECT * FROM ATTEND WHERE id =  ? && username = ?";
         try{
